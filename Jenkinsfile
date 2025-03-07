@@ -1,21 +1,20 @@
-# Contenu 
 pipeline {
-    agent none
-
+    agent any
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'python:3.8-alpine'
-                }
-            }
+        stage('Cloner le repo') {
             steps {
-                sh 'python3.8 -m py_compile sources/prog.py sources/calc.py'
-                stash(name: 'compiled-results', includes: 'sources/*.py*')
+                git 'https://github.com/TON_UTILISATEUR/TON_REPO.git'
+            }
+        }
+        stage('Installer les dépendances') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Exécuter les tests') {
+            steps {
+                sh 'pytest tests/'
             }
         }
     }
 }
-
-
-#
